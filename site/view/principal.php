@@ -13,6 +13,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Se controla AI</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-800 text-gray-800 flex flex-col min-h-screen">
@@ -88,36 +89,46 @@
   </footer>
 
 
-  <div class="fixed hidden inset-0 flex items-center justify-center z-50 backdrop-blur-sm" id="formTransacao">
+  <div class="fixed hidden inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-gray-800 bg-opacity-50" id="formTransacao">
+<!-- hidden -->
+    <div class="bg-gray-900 p-4 rounded-lg shadow w-1/5 h-2/5 flex flex-col justify-bewtween items-center">
+    <div class="w-full h-1 flex justify-end">
+      <button 
+          onclick="hideForm()" 
+          class="bg-red-600 text-white w-6 h-6 flex justify-center items-center rounded-full border-2 border-red-800 hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1 transition duration-300 shadow-md">
+          ✕
+      </button>
+    </div>
 
-    <div class="bg-gray-900 p-4 flex rounded-lg shadow w-1/4 h-1/2 flex justify-center items-center">
-      
-      <form action="" class="formTransacao flex flex-col">
-        <div class="flex flex-col"> <!-- Adicionando flex e gap -->
-          <label for="descricaoTransacao" class="text-white">Descrição</label>
-          <input type="text" class="inputTransacao w-full px-4 py-1 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="descricaoTransacao" name="descricaoTransacao" required placeholder="Descrição da transação">
-        </div>
-
-        <div class="flex flex-col"> <!-- Adicionando flex e gap -->
-          <label for="valorTransacao" class="text-white mt-4">Valor (R$)</label>
-          <input type="number" class="inputTransacao w-full px-4 py-1 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" id="valorTransacao" name="valorTransacao" required placeholder="R$0,00">
-        </div>
-
-        <div class="flex mt-4 justify-around"> <!-- Adicionando flex e gap -->
-          <div class="border-green-900 border p-2 rounded-lg">
-            <label for="adicionar" class="text-white">Adicionar</label>
-            <input type="radio" id="adicionar" name="tipoTransacao" value="adicionar">
+      <div class="mt-12"> <!-- 3rem -->
+        <form action="" class="formTransacao flex flex-col">
+          
+          <div class="flex flex-col">
+            <label for="descricaoTransacao" class="text-white">Descrição</label>
+            <input type="text" class="inputTransacao w-full px-2 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" id="descricaoTransacao" name="descricaoTransacao" required placeholder="Descrição da transação">
           </div>
-
-          <div class="border border-red-900 p-2 rounded-lg">
-            <label for="depositar" class="text-white">Depositar</label>
-            <input type="radio" id="depositar" name="tipoTransacao" value="depositar">
-          </div>          
-        </div>
-
-        <button type="submit" onclick="hideForm()" class="mt-4 bg-gray-600 text-white px-1 py-1 rounded-lg shadow hover:bg-blue-700">Concluir</button>
-      </form>
-
+          
+          <!-- Valor -->
+          <div class="flex flex-col">
+            <label for="valorTransacao" class="text-white mt-4">Valor (R$)</label>
+            <input type="number" class="inputTransacao w-full px-2 py-2 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" id="valorTransacao" name="valorTransacao" required placeholder="R$0,00">
+          </div>
+          
+          <!-- Seleção da Transação -->
+          <div class="flex mt-4 justify-between">
+            <div id="adicionarDiv" class="border-gray-600 border p-2 rounded-l-lg cursor-pointer w-full hover:border-green-900 text-green-900" onclick="selectValue(1)">
+              <button type="button" class="text-white w-full h-full">Adicionar</button>
+            </div>
+            
+            <div id="depositarDiv" class="border-gray-600 p-2 border rounded-r-lg cursor-pointer w-full border-l-0 hover:border-red-900 text-red-900" onclick="selectValue(2)">
+              <button type="button" class="text-white w-full h-full">Depositar</button>
+            </div>
+          </div>
+          
+          <!-- Submissão do Formulário -->
+          <button type="submit" onclick="hideForm()" class="mt-4 bg-gray-600 text-white px-1 py-2 rounded-lg shadow hover:bg-blue-700">Concluir</button>
+        </form>
+      </div>
     </div>
   </div>
 

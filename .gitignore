@@ -1,11 +1,18 @@
 /mysql/mysql
 /rabbitmq
+
 /site/vendor
 /site/logs
+/site/composer*
+/site/shared
+
 
 /banco/vendor
 /banco/logs
+/banco/composer*
+/banco/shared
 
 /microservico/vendor
 /microservico/logs
-
+/microservico/composer*
+/microservico/shared

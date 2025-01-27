@@ -1,0 +1,114 @@
+services:
+  # SERVICO PARA INICIAR O BANCO DE DADOS
+  mysql-se-controla-ai:
+    image: mysql
+    container_name: mysql-se-controla-ai
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    volumes:
+      - ./mysql/mysql:/var/lib/mysql
+      - ./mysql/scripts:/docker-entrypoint-initdb.d
+      
+    networks:
+      - rede-se-controla-ai 
+
+
+  # SERVICO PARA INICIAR O SERVIDOR DE MENSAGENS
+  rabbitmq-se-controla-ai:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-se-controla-ai
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - ./rabbitmq/rabbitmq:/var/lib/rabbitmq
+      - ./rabbitmq/config:/etc/rabbitmq
+    networks:
+      - rede-se-controla-ai
+    command: >
+      sh -c "rabbitmq-plugins enable rabbitmq_management && rabbitmq-server"
+
+
+  # SERVICO PARA INICIAR O SITE PRINCIPAL
+  site-se-controla-ai:
+    build: 
+      context: .
+    image: imagem-se-controla-ai
+    container_name: site-se-controla-ai
+    depends_on:
+      - mysql-se-controla-ai
+      - rabbitmq-se-controla-ai
+    ports:
+      - "8080:80"
+    volumes:
+      - ./site:/var/www/html
+      - ./utils:/var/www/html/shared
+    networks:
+      - rede-se-controla-ai
+    restart: always
+    command: | 
+      sh -c "
+        composer require vlucas/phpdotenv &&
+        composer require php-amqplib/php-amqplib &&
+        apachectl -D FOREGROUND
+      "
+
+  # SERVICO PARA INICIAR O MICROSERVICO
+  microservico-se-controla-ai:
+    build: 
+      context: ./microservico/
+      dockerfile: Dockerfile
+    image: imagem-servico-se-controla-ai
+    container_name: microservico-se-controla-ai
+    depends_on:
+      - mysql-se-controla-ai
+      - rabbitmq-se-controla-ai
+    ports:
+      - "8081:80"
+    volumes:
+      - ./microservico:/var/www/html
+      - ./utils:/var/www/html/shared
+    networks:
+      - rede-se-controla-ai
+    # command: php controletransacoes.php # Comando para executar o script
+    # restart: always
+    command: | 
+      sh -c "
+        composer require vlucas/phpdotenv &&
+        composer require php-amqplib/php-amqplib &&
+        php gerenciadorServico.php
+      "
+
+
+  # SERVICO PARA INICIAR O SERVIDOR APACHE DE CONTROLE DE BANCO
+  banco-se-controla-ai:
+    build: 
+      context: ./banco/
+      dockerfile: Dockerfile
+    image: imagem-servico-se-controla-ai
+    container_name: banco-se-controla-ai
+    depends_on:
+      - mysql-se-controla-ai
+      - rabbitmq-se-controla-ai
+    ports:
+      - "8082:80"
+    volumes:
+      - ./banco:/var/www/html
+      - ./utils:/var/www/html/shared
+    networks:
+      - rede-se-controla-ai
+    command: | 
+      sh -c "
+        composer require vlucas/phpdotenv &&
+        composer require php-amqplib/php-amqplib &&
+        php gerenciadorBanco.php
+      "
+
+  
+# REDES
+networks:
+  rede-se-controla-ai:
+

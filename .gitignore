@@ -1,0 +1,11 @@
+/mysql/mysql
+/rabbitmq
+/site/vendor
+/site/logs
+
+/banco/vendor
+/banco/logs
+
+/microservico/vendor
+/microservico/logs
+
